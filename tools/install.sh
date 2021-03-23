@@ -298,17 +298,11 @@ EOF
  / __ \/ __ \   / __ `__ \/ / / /  /_  / / ___/ __ \
 / /_/ / / / /  / / / / / / /_/ /    / /_(__  ) / / /
 \____/_/ /_/  /_/ /_/ /_/\__, /    /___/____/_/ /_/
-                        /____/                       ....is now installed!
-
+                        /____/                       
+  lnxd edition                                       ....is now installed!
 
 EOF
   cat <<EOF
-Before you scream Oh My Zsh! please look over the ~/.zshrc file to select plugins, themes, and options.
-
-• Follow us on Twitter: $(fmt_underline https://twitter.com/ohmyzsh)
-• Join our Discord server: $(fmt_underline https://discord.gg/ohmyzsh)
-• Get stickers, shirts, coffee mugs and other swag: $(fmt_underline https://shop.planetargon.com/collections/oh-my-zsh)
-
 EOF
   printf %s "$RESET"
 
