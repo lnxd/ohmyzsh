@@ -156,7 +156,7 @@ setup_zshrc() {
 
   sed "/^export ZSH=/ c\\
 export ZSH=\"$ZSH\"
-" "$ZSH/templates/zshrc.zsh-template" > ~/.zshrc-omztemp
+" "$ZSH/.zshrc" > ~/.zshrc-omztemp
 	mv -f ~/.zshrc-omztemp ~/.zshrc
 
 	echo
