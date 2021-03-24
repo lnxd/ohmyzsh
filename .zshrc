@@ -1,7 +1,7 @@
 #chsh -s /usr/local/bin/zsh
 
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:$HOME/Scripts:/usr/local/bin:$PATH
+export PATH=$HOME/Scripts:/usr/local/bin:$HOME/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH
 
 ZSH_DISABLE_COMPFIX=true
 
