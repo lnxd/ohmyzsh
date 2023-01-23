@@ -301,7 +301,7 @@ setup_ohmyzsh() {
   set +o noclobber
   mkdir -p $ZSH/templates
   mkdir -p $ZSH/custom/themes
-  curl "https://raw.githubusercontent.com/lnxd/ohmyzsh/master/.zshrc" > "$ZSH/templates/zshrc.zsh-template"
+  curl "https://raw.githubusercontent.com/lnxd/ohmyzsh/master/templates/zshrc.zsh-template" > "$ZSH/templates/zshrc.zsh-template"
   curl "https://raw.githubusercontent.com/lnxd/ohmyzsh/master/custom/themes/lnxd.zsh-theme" > "$ZSH/custom/themes/lnxd.zsh-theme"
   # Exit installation directory
   cd -
