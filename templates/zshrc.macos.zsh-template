@@ -1,0 +1,66 @@
+# macOS (Apple Silicon) — assumes Homebrew at /opt/homebrew.
+# Machine-specific config belongs in ~/.zshrc.local, which is sourced at the end.
+
+# ── Environment ──────────────────────────────────────────────────────────────
+export EDITOR='nano'
+
+# ── PATH ─────────────────────────────────────────────────────────────────────
+# Deduped, because /etc/zprofile's path_helper reorders PATH between .zshenv
+# and .zshrc on macOS, so this block ends up applied twice on login shells.
+typeset -U path PATH
+
+# Base system paths (lowest priority)
+export PATH="$HOME/bin:/usr/local/bin:/usr/local/sbin:$PATH"
+
+# Homebrew
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+
+# GNU userland without the 'g' prefix, for the formulae that are installed,
+# so `date -d`, `stat -c`, `sed -i` etc. behave as they do on Linux.
+for _f in coreutils gnu-sed gnu-tar gnu-time gnu-units gawk findutils grep diffutils; do
+  [[ -d "/opt/homebrew/opt/$_f/libexec/gnubin" ]] &&
+    export PATH="/opt/homebrew/opt/$_f/libexec/gnubin:$PATH"
+done
+[[ -d /opt/homebrew/opt/binutils/bin ]] && export PATH="/opt/homebrew/opt/binutils/bin:$PATH"
+unset _f
+
+# User paths (highest priority — ~/Scripts wrappers override GNU tools)
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/Scripts:$PATH"
+
+# ── Oh My Zsh ────────────────────────────────────────────────────────────────
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="lnxd"
+zstyle ':omz:update' mode reminder
+plugins=(git)
+source "$ZSH/oh-my-zsh.sh"
+
+# ── Secrets ──────────────────────────────────────────────────────────────────
+# ~/.env is never committed; everything it defines is exported automatically.
+if [[ -f "$HOME/.env" ]]; then
+  set -a; source "$HOME/.env"; set +a
+fi
+
+# ── sudo GUI password prompt ─────────────────────────────────────────────────
+export SUDO_ASKPASS="$HOME/.sudo_askpass.sh"
+if [[ ! -f "$SUDO_ASKPASS" ]]; then
+  cat > "$SUDO_ASKPASS" <<'ASKPASS'
+#!/bin/bash
+osascript -e 'Tell application "System Events" to display dialog "sudo requires your password:" default answer "" with hidden answer' -e 'text returned of result' 2>/dev/null
+ASKPASS
+  chmod +x "$SUDO_ASKPASS"
+fi
+
+# ── Quieter find ─────────────────────────────────────────────────────────────
+find() {
+  command find "$@" 2>&1 | grep -vE '(Permission denied|Operation not permitted)'
+}
+
+# ── Aliases ──────────────────────────────────────────────────────────────────
+alias aria2="aria2c -s 16 -x 16"
+
+# ── Startup ──────────────────────────────────────────────────────────────────
+[[ -e "$HOME/.iterm2_shell_integration.zsh" ]] && source "$HOME/.iterm2_shell_integration.zsh"
+
+# ── Machine-specific config (hosts, tokens, wrappers — not in this repo) ─────
+[[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"

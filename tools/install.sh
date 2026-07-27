@@ -1,11 +1,18 @@
 #!/bin/sh
 # lnxd's oh-my-zsh setup: stock Oh My Zsh + personal template & theme.
 #   sh -c "$(curl -fsSL https://raw.githubusercontent.com/lnxd/ohmyzsh/main/tools/install.sh)"
+#
+# Picks the macOS or Linux .zshrc automatically. Respects $ZSH and $ZSH_CUSTOM.
 set -eu
 
 BASE="${BASE:-https://raw.githubusercontent.com/lnxd/ohmyzsh/main}"
 ZSH="${ZSH:-$HOME/.oh-my-zsh}"
 ZSH_CUSTOM="${ZSH_CUSTOM:-$ZSH/custom}"
+
+case "$(uname -s)" in
+  Darwin) template=zshrc.macos.zsh-template ;;
+  *)      template=zshrc.linux.zsh-template ;;
+esac
 
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
@@ -33,13 +40,13 @@ echo "==> Installing lnxd theme"
 mkdir -p "$ZSH_CUSTOM/themes"
 fetch "$BASE/custom/themes/lnxd.zsh-theme" "$ZSH_CUSTOM/themes/lnxd.zsh-theme"
 
-# 3. ~/.zshrc from our own template, preserving any pre-existing config.
+# 3. ~/.zshrc from the template for this OS, preserving any pre-existing config.
 if [ "$had_zshrc" = yes ] && [ ! -e "$HOME/.zshrc.pre-oh-my-zsh" ]; then
   echo "==> Backing up ~/.zshrc to ~/.zshrc.pre-oh-my-zsh"
   mv "$HOME/.zshrc" "$HOME/.zshrc.pre-oh-my-zsh"
 fi
-echo "==> Writing ~/.zshrc"
-fetch "$BASE/templates/zshrc.zsh-template" "$tmp/zshrc"
+echo "==> Writing ~/.zshrc from $template"
+fetch "$BASE/templates/$template" "$tmp/zshrc"
 sed "s|^export ZSH=.*$|export ZSH=\"$ZSH\"|" "$tmp/zshrc" > "$HOME/.zshrc"
 
 case "${SHELL:-}" in
@@ -47,4 +54,4 @@ case "${SHELL:-}" in
   *) echo "==> Your login shell isn't zsh. Run: chsh -s \"\$(command -v zsh)\"" ;;
 esac
 
-echo "==> Done. Run 'exec zsh' to reload."
+echo "==> Done. Machine-specific config goes in ~/.zshrc.local. Run 'exec zsh' to reload."

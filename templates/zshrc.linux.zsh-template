@@ -1,0 +1,35 @@
+# Linux. Machine-specific config belongs in ~/.zshrc.local, sourced at the end.
+
+# ── Environment ──────────────────────────────────────────────────────────────
+export EDITOR='nano'
+
+# ── PATH ─────────────────────────────────────────────────────────────────────
+typeset -U path PATH
+
+# ~/.local/bin first: self-updating tools installed there must win over any
+# older copy left in /usr/local/bin by a system/image install.
+export PATH="$HOME/.local/bin:$HOME/bin:$HOME/Scripts:$PATH"
+
+# ── Oh My Zsh ────────────────────────────────────────────────────────────────
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="lnxd"
+zstyle ':omz:update' mode reminder
+plugins=(git)
+source "$ZSH/oh-my-zsh.sh"
+
+# ── Secrets ──────────────────────────────────────────────────────────────────
+# ~/.env is never committed; everything it defines is exported automatically.
+if [[ -f "$HOME/.env" ]]; then
+  set -a; source "$HOME/.env"; set +a
+fi
+
+# ── Quieter find ─────────────────────────────────────────────────────────────
+find() {
+  command find "$@" 2>&1 | grep -vE '(Permission denied|Operation not permitted)'
+}
+
+# ── Aliases ──────────────────────────────────────────────────────────────────
+alias aria2="aria2c -s 16 -x 16"
+
+# ── Machine-specific config (hosts, tokens, wrappers — not in this repo) ─────
+[[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
