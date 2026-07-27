@@ -1,6 +1,8 @@
 ## Please note that this is a custom version of Oh My Zsh
 
-`sh -c "$(curl -fsSL https://raw.githubusercontent.com/lnxd/ohmyzsh/master/tools/install.sh)"` 
+`sh -c "$(curl -fsSL https://raw.githubusercontent.com/lnxd/ohmyzsh/main/tools/install.sh)"` 
+
+This installs **stock Oh My Zsh** straight from upstream, then layers on a personal `.zshrc` and the `lnxd` theme. Nothing in the Oh My Zsh clone is modified, so `omz update` keeps working normally.
 
 <p align="center"><img src="https://ohmyzsh.s3.amazonaws.com/omz-ansi-github.png" alt="Oh My Zsh"></p>
 
